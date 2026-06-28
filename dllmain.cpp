@@ -181,7 +181,7 @@ DWORD WINAPI MainThread(LPVOID)
 
     MH_CreateHook(
         target,
-        &HookedUpdateGame,
+        reinterpret_cast<LPVOID>(HookedUpdateGame),
         reinterpret_cast<void**>(&OriginalUpdateGame));
 
     MH_EnableHook(target);
@@ -190,7 +190,7 @@ DWORD WINAPI MainThread(LPVOID)
 
     MH_CreateHook(
         target,
-        &HookedGiveMutation,
+        reinterpret_cast<LPVOID>(HookedGiveMutation),
         reinterpret_cast<void**>(&OriginalGiveMutation));
 
     MH_EnableHook(target);
@@ -200,7 +200,7 @@ DWORD WINAPI MainThread(LPVOID)
 
     MH_CreateHook(
         target,
-        &HookedMapGen,
+        reinterpret_cast<LPVOID>(HookedMapGen),
         reinterpret_cast<void**>(&OriginalMapGen));
 
     MH_EnableHook(target);
