@@ -1,4 +1,0 @@
-#ifndef PRIMOD_LIBRARY_H
-#define PRIMOD_LIBRARY_H
-
-#endif //PRIMOD_LIBRARY_H
