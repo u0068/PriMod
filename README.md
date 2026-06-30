@@ -4,9 +4,10 @@ A WIP modloader for Primordialis.
 ## AIMS:
 - Make making and loading mods as easy as possible
 ## TODO:
+- Modlist
 - Inject Mod DLLs
   - 1 Hardcoded DLL (DONE)
-  - Any specified DLLs
+  - DLL specified on modlist
 - Basic UI
   - Mod list editor
     - Enable/Disable mods
@@ -20,6 +21,8 @@ A WIP C++ API for Primordialis mods.
 - C++ API (Plasmid API)
 - Extend the LUA API
 ## TODO:
+- Make a DLL (DONE)
+- Organise files
 - Precompute relevant symbol addresses
     - Functions (DONE)
     - Labels
@@ -28,4 +31,6 @@ A WIP C++ API for Primordialis mods.
     - Unions
     - Enums
 - Hook functions (DONE)
+- Helper functions
 - Lua API
+- External mod config and assets
