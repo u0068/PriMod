@@ -1,17 +1,12 @@
-#include <Windows.h>
-#include <TlHelp32.h>
 #include <iostream>
+#include <windows.h>
+#include <TlHelp32.h>
+#include <string>
 
-/**
- * Function wich find the process id of the specified process.
- * \param lpProcessName : name of the target process.
- * \return : the process id if the process is found else -1.
- */
 DWORD GetProcessByName(const char* lpProcessName)
 {
-    //char lpCurrentProcessName[255];
 
-    PROCESSENTRY32 ProcList {};
+    PROCESSENTRY32 ProcList{};
     ProcList.dwSize = sizeof(ProcList);
 
     const HANDLE hProcList = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -21,40 +16,27 @@ DWORD GetProcessByName(const char* lpProcessName)
     if (!Process32First(hProcList, &ProcList))
         return -1;
 
+    //wcstombs_s(nullptr, lpCurrentProcessName, ProcList.szExeFile, 255);
+
+    // if (lstrcmpA(lpCurrentProcessName, lpProcessName) == 0)
+    //     return ProcList.th32ProcessID;
+
     do {
-        //wcstombs_s(nullptr, lpCurrentProcessName, ProcList.szExeFile, 255);
+        char* lpCurrentProcessName = ProcList.szExeFile;
 
-        const char* lpCurrentProcessName = ProcList.szExeFile;
-
-        //printf(lpCurrentProcessName);
+        //wcstombs_s(nullptr, lpCurrentProcessName, reinterpret_cast<wchar_t const*>(ProcList.szExeFile), 255);
 
         if (lstrcmpA(lpCurrentProcessName, lpProcessName) == 0)
             return ProcList.th32ProcessID;
-
     } while (Process32Next(hProcList, &ProcList));
 
     return -1;
 }
 
-int main(const int argc, char* argv[])
+int inject(const char* lpDLLName, const char* lpFullDLLPath, const char* lpProcessName)
 {
-    char* lpDLLName;
-    char* lpProcessName;
-    char lpFullDLLPath[MAX_PATH];
-
-    if (argc == 3)
-    {
-        lpDLLName = argv[1];
-        lpProcessName = argv[2];
-    }
-    else
-    {
-        printf("[HELP] inject.exe <dll> <process>\n");
-        return -1;
-    }
-
     const DWORD dwProcessID = GetProcessByName(lpProcessName);
-    if (dwProcessID == (DWORD) -1)
+    if (dwProcessID == (DWORD)-1)
     {
         printf("An error is occured when trying to find the target process.\n");
         return -1;
@@ -64,7 +46,7 @@ int main(const int argc, char* argv[])
     printf("Process : %s\n", lpProcessName);
     printf("Process ID : %i\n\n", (int)dwProcessID);
 
-    const DWORD dwFullPathResult = GetFullPathNameA(lpDLLName, MAX_PATH, lpFullDLLPath, nullptr);
+    const DWORD dwFullPathResult = GetFullPathNameA(lpDLLName, MAX_PATH, const_cast<char*>(lpFullDLLPath), nullptr);
     if (dwFullPathResult == 0)
     {
         printf("An error is occured when trying to get the full path of the DLL.\n");
@@ -121,7 +103,22 @@ int main(const int argc, char* argv[])
 
     printf("DLL Injected !\n");
 
-    //while (true) {}
-
     return 0;
+}
+
+int main()
+{
+    while (true)
+    {
+        //std::cout << "Enter  dll name, then dll path:\n";
+
+        std::string dllname = "PriMod.dll";
+        //std::getline(std::cin, dllname);
+        std::string dllpath = "PriModLoader.dll";
+        //std::getline(std::cin, dllpath);
+        std::string lpprocessname = "primordialis.exe";
+        //std::getline(std::cin, lpprocessname);
+
+        inject(dllname.c_str(), dllpath.c_str(), lpprocessname.c_str());
+    }
 }
