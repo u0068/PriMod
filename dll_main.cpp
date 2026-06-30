@@ -3,8 +3,6 @@
 #include <MinHook.h>
 #include "api.h"
 
-struct body;
-
 void hooked_give_mutation(body *param_1,int param_2,int *param_3,int param_4,bool param_5)
 {
     api::give_mutation(param_1,param_2,param_3,param_4,param_5);
