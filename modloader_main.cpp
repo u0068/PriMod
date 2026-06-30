@@ -99,19 +99,22 @@ int inject(const char* lpDLLName, const char* lpFullDLLPath, const char* lpProce
     return 0;
 }
 
-int main()
+int main(const int argc, char* argv[])
 {
-    //while (true)
+    char* dllname;
+    char* lpprocessname;
+    char dllpath[MAX_PATH];
+
+    if (argc == 3)
     {
-        //std::cout << "Enter  dll name, then dll path:\n";
-
-        std::string dllname = "PriMod.dll";
-        //std::getline(std::cin, dllname);
-        std::string dllpath = "PriModLoader.dll";
-        //std::getline(std::cin, dllpath);
-        std::string lpprocessname = "primordialis.exe";
-        //std::getline(std::cin, lpprocessname);
-
-        inject(dllname.c_str(), dllpath.c_str(), lpprocessname.c_str());
+        dllname = argv[1];
+        lpprocessname = argv[2];
     }
+    else
+    {
+        printf("[HELP] inject.exe <dll> <process>\n");
+        return -1;
+    }
+
+    inject(dllname, dllpath, lpprocessname);
 }
