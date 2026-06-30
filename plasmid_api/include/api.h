@@ -1,19 +1,28 @@
 #pragma once
 #include <cstdint>
-#include <MinHook.h>
+#include "../../minhook/include/MinHook.h"
 
 // TODO: Include all the structs, labels etc
 struct body;
 
 namespace api
 {
-    constexpr uintptr_t BASE = reinterpret_cast<uintptr_t>(GetModuleHandle(nullptr));
+    constexpr uintptr_t BASE = 0;
 
     template<typename T>
-    constexpr T RVA(const uintptr_t rva)
+    constexpr T RVA(uintptr_t rva)
     {
-        return reinterpret_cast<T>(BASE + rva);
+        return reinterpret_cast<T>(
+            reinterpret_cast<uintptr_t>(GetModuleHandle(nullptr)) + rva);
     }
+
+    inline auto set_lava_walls =
+        RVA<void(*)()>(0x6F7D0);
+
+    inline auto give_mutation =
+        RVA<void(*)(body*, int, int*, int, bool)>(0x6FC80);
+
+    //#include "function_exports.h"
 
     template<typename T>
     bool Hook(T& original, T hook)
@@ -41,6 +50,4 @@ namespace api
 
         return true;
     }
-
-    #include "function_exports.h"
 }

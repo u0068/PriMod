@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <cstdio>
 #include <MinHook.h>
-#include "api.h"
+#include "include/api.h"
 
 void hooked_give_mutation(body *param_1,int param_2,int *param_3,int param_4,bool param_5)
 {
@@ -38,7 +38,7 @@ DWORD WINAPI MainThread(LPVOID)
     }
     printf("MinHook initialized\n");
 
-    api::log_printf("Running with mods!");
+    //api::log_printf("Running with mods!");
 
     api::Hook(api::give_mutation, hooked_give_mutation);
 
