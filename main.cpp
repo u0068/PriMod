@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <TlHelp32.h>
 #include <string>
+#include <SFML/Graphics.hpp>
 
 DWORD GetProcessByName(const char* lpProcessName)
 {
