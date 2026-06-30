@@ -2,8 +2,7 @@
 #include <cstdint>
 #include "external/minhook/include/MinHook.h"
 
-// TODO: Include all the structs
-struct body;
+// TODO: Include all the structs, labels etc
 
 namespace api
 {
