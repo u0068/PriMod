@@ -10,7 +10,7 @@ add_library(PriMod SHARED plasmid_api/dll_main.cpp
         plasmid_api/include/forward_declarations.h
         plasmid_api/include/ghidra_types.h)
 
-add_subdirectory(plasmid_api/include/external/minhook)
+add_subdirectory(external/minhook)
 
 target_link_libraries(PriMod PRIVATE minhook)
 

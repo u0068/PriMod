@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "../../minhook/include/MinHook.h"
+#include <MinHook.h>
 
 // TODO: Include all the structs, labels etc
 struct body;
