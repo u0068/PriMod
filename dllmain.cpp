@@ -108,51 +108,66 @@ void HookedInitMaterialsList()
 {
     OriginalInitMaterialsList();
 
-    material_t *materials_list = reinterpret_cast<material_t(*)>(base + 0x1ed800); // i have no idea what im doing lmao
-    material_t *pmVar49;
-    pmVar49 = materials_list;
-    int* n_materials = reinterpret_cast<int(*)>(base + 0x1ed808);
-    int lVar137 = 81;//*n_materials;//(longlong)n_materials;
-    n_materials = n_materials + 1;
-    //memcpy();
-    int uVar45 = 100;//str_to_id("FAST");
-    pmVar49[lVar137].id = uVar45;
-    pmVar49[lVar137].tags = 0x14;
-    pmVar49[lVar137].tier = 0;
-    pmVar49[lVar137].drop_weight = 0.5;
-    pmVar49[lVar137].base_cost = 3.0;
-    pmVar49[lVar137].genome_size = 4.0;
-    pmVar49[lVar137].movement_force = pmVar49[lVar137].movement_force * 14.0;
-    pmVar49[lVar137].base_color;
-
 }
 
-using GiveMutationFn = void(*)(body *,int ,int *,int ,bool );
-GiveMutationFn OriginalGiveMutation = nullptr;
+auto set_lava_walls = reinterpret_cast<void(*)()>(base + 0x6f7d0);
+auto give_mutation = reinterpret_cast<void(*)(body *, int, int *, int, bool)>(base + 0x6fc80);
 
-void HookedGiveMutation(body *param_1,int param_2,int *param_3,int param_4,bool param_5)
+void hooked_give_mutation(body *param_1,int param_2,int *param_3,int param_4,bool param_5)
 {
-    //reinterpret_cast<void(*)()>(base + 0x6f7d0)(); // set lava walls
-    OriginalGiveMutation(param_1,param_2,param_3,param_4,param_5);
+    give_mutation(param_1,param_2,param_3,param_4,param_5);
+
+    set_lava_walls();
 
     // putting this here so i can turn it on at will in the right context
 
-    int n_materials = *reinterpret_cast<int(*)>(base + 0x1ed808);
-    printf("%d\n", n_materials);
-
-    material_t** materials_list = reinterpret_cast<material_t**>(base + 0x1ed800); // i have no idea what im doing lmao
-    int cell_type_index = n_materials + 1;
-    (*materials_list)[cell_type_index] = (*materials_list)[1];
-    (*materials_list)[cell_type_index].base_cost = 43.f;
-    (*materials_list)[cell_type_index].movement_force = 0.5f;
-    (*materials_list)[cell_type_index].base_color = real_4(1., 0.5, 1., 1.);
+    // int n_materials = *reinterpret_cast<int(*)>(base + 0x1ed808);
+    // printf("%d\n", n_materials);
+    //
+    // material_t** materials_list = reinterpret_cast<material_t**>(base + 0x1ed800); // i have no idea what im doing lmao
+    // int cell_type_index = n_materials + 1;
+    // (*materials_list)[cell_type_index] = (*materials_list)[1];
+    // (*materials_list)[cell_type_index].base_cost = 43.f;
+    // (*materials_list)[cell_type_index].movement_force = 0.5f;
+    // (*materials_list)[cell_type_index].base_color = real_4(1., 0.5, 1., 1.);
 }
 
-using MapGenFn = void(*)();
-MapGenFn OriginalMapGen = nullptr;
-void HookedMapGen()
+// void hook_function(auto original, auto detour)
+// {
+//     void* target = reinterpret_cast<void*>(original);
+//     MH_CreateHook(
+//         target,
+//         &detour,
+//         reinterpret_cast<void**>(&original)
+//     );
+//     MH_EnableHook(target);
+// }
+
+template<typename T>
+bool Hook(T& original, T hook)
 {
-    OriginalMapGen();
+    void* target = reinterpret_cast<void*>(original);
+
+    auto status = MH_CreateHook(
+        target,
+        reinterpret_cast<void*>(hook),
+        reinterpret_cast<void**>(&original));
+
+    if (status != MH_OK)
+    {
+        printf("MH_CreateHook failed: %d\n", status);
+        return false;
+    }
+
+    status = MH_EnableHook(target);
+
+    if (status != MH_OK)
+    {
+        printf("MH_EnableHook failed: %d\n", status);
+        return false;
+    }
+
+    return true;
 }
 
 DWORD WINAPI MainThread(LPVOID)
@@ -175,43 +190,25 @@ DWORD WINAPI MainThread(LPVOID)
 
     printf("MinHook initialized\n");
 
-    void* target = (void*)(base + 0x143db0);
-
-    MH_Initialize();
-
-    MH_CreateHook(
-        target,
-        reinterpret_cast<LPVOID>(HookedUpdateGame),
-        reinterpret_cast<void**>(&OriginalUpdateGame));
-
-    MH_EnableHook(target);
-
-    target = (void*)(base + 0x6fc80);
-
-    MH_CreateHook(
-        target,
-        reinterpret_cast<LPVOID>(HookedGiveMutation),
-        reinterpret_cast<void**>(&OriginalGiveMutation));
-
-    MH_EnableHook(target);
-
-
-    target = (void*)(base + 0x106a10);
-
-    MH_CreateHook(
-        target,
-        reinterpret_cast<LPVOID>(HookedMapGen),
-        reinterpret_cast<void**>(&OriginalMapGen));
-
-    MH_EnableHook(target);
-
-    // target = (void*)(base + 0x11f560);
+    // void* target = (void*)(OriginalUpdateGame);
+    //
+    // MH_Initialize();
     //
     // MH_CreateHook(
     //     target,
-    //     &HookedInitMaterialsList,
-    //     reinterpret_cast<void**>(&OriginalInitMaterialsList));
+    //     &HookedUpdateGame,
+    //     reinterpret_cast<void**>(&OriginalUpdateGame));
     //
+    // MH_EnableHook(target);
+
+    Hook(give_mutation, hooked_give_mutation);
+
+    // void* target = reinterpret_cast<void*>(give_mutation);
+    // MH_CreateHook(
+    //     target,
+    //     &hooked_give_mutation,
+    //     reinterpret_cast<void**>(&give_mutation)
+    // );
     // MH_EnableHook(target);
 
     while (true)

@@ -14,3 +14,11 @@ add_subdirectory(external/minhook)
 target_link_libraries(PriMod PRIVATE minhook)
 
 add_executable(PriModLoader main.cpp main.h)
+
+
+cmake_minimum_required(VERSION 3.0)
+project(Basic_DLL_Injector)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(inject main.cpp)
