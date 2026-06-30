@@ -5,7 +5,6 @@
 
 DWORD GetProcessByName(const char* lpProcessName)
 {
-
     PROCESSENTRY32 ProcList{};
     ProcList.dwSize = sizeof(ProcList);
 
@@ -16,19 +15,13 @@ DWORD GetProcessByName(const char* lpProcessName)
     if (!Process32First(hProcList, &ProcList))
         return -1;
 
-    //wcstombs_s(nullptr, lpCurrentProcessName, ProcList.szExeFile, 255);
-
-    // if (lstrcmpA(lpCurrentProcessName, lpProcessName) == 0)
-    //     return ProcList.th32ProcessID;
-
-    do {
+    while (Process32Next(hProcList, &ProcList))
+    {
         char* lpCurrentProcessName = ProcList.szExeFile;
-
-        //wcstombs_s(nullptr, lpCurrentProcessName, reinterpret_cast<wchar_t const*>(ProcList.szExeFile), 255);
 
         if (lstrcmpA(lpCurrentProcessName, lpProcessName) == 0)
             return ProcList.th32ProcessID;
-    } while (Process32Next(hProcList, &ProcList));
+    }
 
     return -1;
 }
@@ -108,7 +101,7 @@ int inject(const char* lpDLLName, const char* lpFullDLLPath, const char* lpProce
 
 int main()
 {
-    while (true)
+    //while (true)
     {
         //std::cout << "Enter  dll name, then dll path:\n";
 
