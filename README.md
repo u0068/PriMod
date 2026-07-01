@@ -21,11 +21,12 @@ A WIP C++ API for Primordialis mods.
 - C++ API (Plasmid API)
 - Extend the LUA API
 ## TODO:
+- Unscuff the super scuffed temporary solutions
 - Make a DLL (DONE)
 - Organise files
 - Precompute relevant symbol addresses
     - Functions (DONE)
-    - Labels
+    - Labels (DONE)
 - Precompute data type definitions
     - Structs
     - Unions
