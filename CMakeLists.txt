@@ -11,11 +11,11 @@ add_library(PriMod SHARED plasmid_api/dll_main.cpp
 add_subdirectory(plasmid_api/include/external/minhook)
 
 
-add_subdirectory(external/SFML)
+add_subdirectory(pilus_modloader/external/SFML)
 
-add_subdirectory(external/zlib)
+add_subdirectory(pilus_modloader/external/zlib)
 
-add_subdirectory(external/zlib/contrib/minizip)
+add_subdirectory(pilus_modloader/external/zlib/contrib/minizip)
 
 add_executable(PriModLoader modloader_main.cpp "modloader.h")
 
