@@ -661,7 +661,6 @@ void ModManager::RefreshMods()
         {
             if (mods[i] == fmods[j])
             {
-                printf("foind exisitgn mod\n");
                 finalmods.push_back(fmods[j]);
                 // retain enabled
                 finalmods[finalmods.size() - 1].enabled = mods[i].enabled;
@@ -671,7 +670,6 @@ void ModManager::RefreshMods()
     // add new mods
     for (int i = 0; i < fmods.size(); i++)
     {
-        printf("foud new mod\n");
         bool addthismod = true;
         for (int j = 0; j < finalmods.size(); j++)
         {
@@ -827,8 +825,8 @@ int main(const int argc, char* argv[])
     
     sf::Font font;
     sf::Text text(font);
-    if (!font.openFromFile("verdana.ttf")) // load verdana if available
-        if (!font.openFromFile("data/CreatoDisplay-Regular.otf")) // try grab from primordialis instead
+    if (!font.openFromFile("data/CreatoDisplay-Regular.otf")) // try grab from primordialis instead
+        if (!font.openFromFile("verdana.ttf")) // load verdana if available
             printf("FAILED TO LOAD FONT\n");
 
     ModManager manager;
