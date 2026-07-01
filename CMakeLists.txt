@@ -6,9 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 add_library(PriMod SHARED plasmid_api/dll_main.cpp
-        plasmid_api/include/api.h
-        plasmid_api/include/forward_declarations.h
-        plasmid_api/include/ghidra_types.h)
+        plasmid_api/include/api.h)
 
 add_subdirectory(plasmid_api/include/external/minhook)
 
