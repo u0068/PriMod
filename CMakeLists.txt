@@ -5,13 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-add_library(PriMod SHARED dll_main.cpp
-        modloader_main.cpp
-        api.h "modloader.h")
+add_library(PriMod SHARED plasmid_api/dll_main.cpp
+        plasmid_api/include/api.h)
 
-add_subdirectory(external/minhook)
+add_subdirectory(plasmid_api/include/external/minhook)
 
-target_link_libraries(PriMod PRIVATE minhook)
 
 add_subdirectory(external/SFML)
 
@@ -27,3 +25,5 @@ target_link_libraries(PriMod PRIVATE SFML::Graphics)
 target_link_libraries(PriModLoader PRIVATE MINIZIP::minizipstatic)
 target_link_libraries(PriMod PRIVATE MINIZIP::minizipstatic)
 
+
+add_executable(PriModLoader pilus_modloader/modloader_main.cpp pilus_modloader/modloader.h)

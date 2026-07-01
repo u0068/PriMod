@@ -1,17 +1,14 @@
 #include <windows.h>
 #include <cstdio>
 #include <MinHook.h>
-#include "api.h"
-
-//uintptr_t base = (uintptr_t)GetModuleHandle(nullptr);
-
-struct body;
+#include "include/api.h"
+#include "include/function_exports.h"
 
 void hooked_give_mutation(body *param_1,int param_2,int *param_3,int param_4,bool param_5)
 {
-    api::give_mutation(param_1,param_2,param_3,param_4,param_5);
+    give_mutation_6FC80(param_1,param_2,param_3,param_4,param_5);
 
-    api::set_lava_walls();
+    set_lava_walls_6F7D0();
 
     // putting this here so i can turn it on at will in the right context
 
@@ -42,9 +39,9 @@ DWORD WINAPI MainThread(LPVOID)
     }
     printf("MinHook initialized\n");
 
-    api::log_printf("Running with mods!");
+    //api::log_printf("Running with mods!");
 
-    api::Hook(api::give_mutation, hooked_give_mutation);
+    Hook(give_mutation_6FC80, hooked_give_mutation);
 
     while (true)
     {
