@@ -17,13 +17,7 @@ add_subdirectory(pilus_modloader/external/zlib)
 
 add_subdirectory(pilus_modloader/external/zlib/contrib/minizip)
 
-add_executable(PriModLoader modloader_main.cpp "modloader.h")
-
+add_executable(PriModLoader pilus_modloader/modloader_main.cpp pilus_modloader/modloader.h)
 
 target_link_libraries(PriModLoader PRIVATE SFML::Graphics)
-target_link_libraries(PriMod PRIVATE SFML::Graphics)
 target_link_libraries(PriModLoader PRIVATE MINIZIP::minizipstatic)
-target_link_libraries(PriMod PRIVATE MINIZIP::minizipstatic)
-
-
-add_executable(PriModLoader pilus_modloader/modloader_main.cpp pilus_modloader/modloader.h)
