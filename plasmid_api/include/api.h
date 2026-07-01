@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
-#include <MinHook.h>
+#include "../../minhook/include/MinHook.h"
 
 // TODO: Include all the structs, labels etc
-struct body;
+//struct body;
 
 namespace api
 {
@@ -22,7 +22,7 @@ namespace api
     inline auto give_mutation =
         RVA<void(*)(body*, int, int*, int, bool)>(0x6FC80);
 
-    //#include "function_exports.h"
+    #include "function_exports.h"
 
     template<typename T>
     bool Hook(T& original, T hook)
